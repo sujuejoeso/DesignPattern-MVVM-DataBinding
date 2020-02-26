@@ -1,57 +1,40 @@
 package com.joeso.designpattern_mvvm;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.joeso.designpattern_mvvm.databinding.MyViewBinding;
 
 public class MyView extends AppCompatActivity {
     private Button bnChangeSource;
     private Button bnGetData;
     private EditText etSource;
     private TextView tvResult;
+    private TextView tvData;
+
     private MyViewModel mViewModel;
     private MyRepository myRepository;
+
+    MyViewBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        bnChangeSource = findViewById(R.id.button);
-        bnGetData=findViewById(R.id.button2);
-        etSource = findViewById(R.id.source);
-        tvResult = findViewById(R.id.result);
+        mBinding= DataBindingUtil.setContentView(this,R.layout.my_view);
+        tvData=findViewById(R.id.data);
         myRepository=MyRepository.getInstance();
         mViewModel = ViewModelProviders.of(this).get(MyViewModel.class);
 
-        bnChangeSource.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(etSource.getText()!=null)
-                    myRepository.setData(etSource.getText().toString());
-            }
-        });
+        mBinding.setMyData("I am binded !");
 
-        bnGetData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setText();
-            }
-        });
-    }
 
-    private void setText() {
-        mViewModel.getData().observe(this,new Observer<String>() {
-            @Override
-            public void onChanged (String data){
-                tvResult.setText(data);
-            }
-        });
+
+
     }
 }
